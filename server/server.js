@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 5000;
 await connectDB(process.env.MONGO_URI);
 
 const app = express();
-app.use(cors({ origin: process.env.CLIENT_URL || "http://localhost:5173" || "https://email-signature-5uxy-ds59mex93-sandeep-lodhis-projects-ea637816.vercel.app" }));
+app.use(cors({ origin: process.env.CLIENT_URL || "http://localhost:5173" || "https://email-signature-5uxy.vercel.app/" || "*" }));
 app.use(express.json({ limit: "5mb" }));
 
 app.use("/api/users", usersRouter);
