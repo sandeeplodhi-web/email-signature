@@ -5,6 +5,8 @@ import AdminForm from "./components/AdminForm";
 import SignaturePreview from "./components/SignaturePreview";
 import UserList from "./components/UserList";
 import sampleUser from "./sampleUser";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function App() {
   const [users, setUsers] = useState([]);
@@ -269,61 +271,64 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <h1 className="text-2xl font-bold text-center mb-6 text-gray-800">
-        Email Signature Manager
-      </h1>
+    <>
+      <div className="min-h-screen bg-gray-100 p-6">
+        <h1 className="text-2xl font-bold text-center mb-6 text-gray-800">
+          Email Signature Manager
+        </h1>
 
-      {/* Top Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        <div className="bg-white rounded-xl shadow p-4">
-          <h2 className="text-lg font-semibold mb-3 text-gray-700">
-            {editUser ? "Edit User" : "Add User"}
-          </h2>
-          <AdminForm onSaved={handleSaved} editUser={editUser} />
+        {/* Top Section */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div className="bg-white rounded-xl shadow p-4">
+            <h2 className="text-lg font-semibold mb-3 text-gray-700">
+              {editUser ? "Edit User" : "Add User"}
+            </h2>
+            <AdminForm onSaved={handleSaved} editUser={editUser} />
+          </div>
+          <div className="bg-white rounded-xl shadow p-4">
+            <div className="flex justify-between items-center mb-3">
+              <h2 className="text-lg font-semibold text-gray-700">Users</h2>
+              <button
+                onClick={fetchUsers}
+                className="px-3 py-1 bg-gray-200 hover:bg-gray-300 text-sm rounded"
+              >
+                Refresh
+              </button>
+            </div>
+            <UserList
+              users={users}
+              onSelect={setSelected}
+              selectedId={selected?._id}
+              onEdit={setEditUser}
+            />
+          </div>
         </div>
-        <div className="bg-white rounded-xl shadow p-4">
-          <div className="flex justify-between items-center mb-3">
-            <h2 className="text-lg font-semibold text-gray-700">Users</h2>
+
+        {/* Preview */}
+        <div className="bg-white rounded-xl shadow p-6 max-w-4xl mx-auto">
+          <h2 className="text-lg font-semibold text-gray-700 mb-4 text-center">
+            Preview (table-based email layout)
+          </h2>
+          <div id="signature-html" className="border p-4 flex justify-center">
+            <SignaturePreview user={selected} />
+          </div>
+          <div className="flex justify-center gap-4 mt-6">
             <button
-              onClick={fetchUsers}
-              className="px-3 py-1 bg-gray-200 hover:bg-gray-300 text-sm rounded"
+              onClick={handleCopy}
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
             >
-              Refresh
+              Copy HTML
+            </button>
+            <button
+              onClick={handleDownload}
+              className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg"
+            >
+              Download .html
             </button>
           </div>
-          <UserList
-            users={users}
-            onSelect={setSelected}
-            selectedId={selected?._id}
-            onEdit={setEditUser}
-          />
         </div>
       </div>
-
-      {/* Preview */}
-      <div className="bg-white rounded-xl shadow p-6 max-w-4xl mx-auto">
-        <h2 className="text-lg font-semibold text-gray-700 mb-4 text-center">
-          Preview (table-based email layout)
-        </h2>
-        <div id="signature-html" className="border p-4 flex justify-center">
-          <SignaturePreview user={selected} />
-        </div>
-        <div className="flex justify-center gap-4 mt-6">
-          <button
-            onClick={handleCopy}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
-          >
-            Copy HTML
-          </button>
-          <button
-            onClick={handleDownload}
-            className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg"
-          >
-            Download .html
-          </button>
-        </div>
-      </div>
-    </div>
+      <ToastContainer position="top-right" autoClose={2500} />
+    </>
   );
 }
